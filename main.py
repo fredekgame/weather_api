@@ -77,5 +77,5 @@ def send_message(message):
             print(time.ctime(), "User id:", message.from_user.id)
             print(time.ctime(), "Message:", message.text.title(), 'Error')
         bot.send_message(message.chat.id, answer)
-
+        
 bot.polling(none_stop=True)
