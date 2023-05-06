@@ -3,18 +3,18 @@ import telebot
 import time
 from pyowm.utils.config import get_default_config
 #
-botToken = ('5179292832:AAGHTaTb0dJQgaA33dPvfsoElzJthYu73hQ') 
+botToken = ('bot_token') 
 bot = telebot.TeleBot(botToken)
-owmToken = ('b0cc036c5e1d3c065d1218286e4b72cd') 
+owmToken = ('api_token') 
 config_dict = get_default_config()
-config_dict['language'] = 'ru'
-owm = pyowm.OWM('b0cc036c5e1d3c065d1218286e4b72cd', config_dict)
+config_dict['language'] = 'en'
+owm = pyowm.OWM('api_token', config_dict)
 mgr = owm.weather_manager()
 
 @bot.message_handler(content_types=['text'])
 def send_message(message):
     if message.text.lower() == "weather":
-        bot.send_message(message.from_user.id, "Здравствуйте. Вы можете узнать здесь погоду. Просто напишите название города." + "\n")
+        bot.send_message(message.from_user.id, "Hello. You can check the weather here. Just write the name of the city:" + "\n")
     else:
         try:
             observation = mgr.weather_at_place(message.text)
@@ -26,54 +26,54 @@ def send_message(message):
             timer = weather.reference_time('iso')
             print(time.ctime(), "User id:", message.from_user.id)
             print(time.ctime(), "Message:", message.text.title(), temp, "C", temp_max, "C", temp_min, "C", wind, "m/c", timer, weather.detailed_status)
-            answer = "В городе " + message.text.title() + " сейчас " + weather.detailed_status + "." + "\n"
-            answer += "Температура около: " + str(temp) + " С" + "\n"
-            answer += "Максимальная температура: " + str(temp_max) + " C" + "\n"
-            answer += "Минимальная температура: " + str(temp_min) + " C" + "\n"
-            answer += "Ветер: " + str(wind) + " m/c" + "\n"
-            answer += "Дата: " + str(timer) + "\n\n"
-            if temp < -10 and weather.detailed_status == "снег":
-                answer += "Сегодня очено холодно, одеайтесь тепло!"
-            elif temp < -10 and weather.detailed_status == "дождь":
-                answer += "Сегодня дождь, хорошо одевайтесь." 
-            elif temp < -10 and weather.detailed_status == "пасмурно":
-                answer += "Сегодня прохладно, одевайтесь потеплее."
-            elif temp < -10 and weather.detailed_status == "ясно":
-                answer += "Сегодня солнышко, хорошо одевайтесь."
-            elif temp < 0 and weather.detailed_status == "снег":
-                answer += "Сегодня снег, одевайтесь тепло!" 
-            elif temp < 0 and weather.detailed_status == "дождь":
-                answer += "Сегодня дождь, хорошо одевайтесь."
-            elif temp < 0 and weather.detailed_status == "пасмурно":
-                answer += "Сегодня прохладно, одевайтесь потеплее."
-            elif temp < 0 and weather.detailed_status == "ясно":
-                answer += "Сегодня солнышко, хорошо одевайтесь." 
-            elif temp < 10 and weather.detailed_status == "снег":
-                answer += "Сегодня град, седите дома!"
+            answer = "In the city " + message.text.title() + " now " + weather.detailed_status + "." + "\n"
+            answer += "Temperature around: " + str(temp) + " С" + "\n"
+            answer += "Maximum temperature: " + str(temp_max) + " C" + "\n"
+            answer += "Minimum temperature: " + str(temp_min) + " C" + "\n"
+            answer += "Wind: " + str(wind) + " m/c" + "\n"
+            answer += "Date: " + str(timer) + "\n\n"
+            if temp < -10 and weather.detailed_status == "Snow":
+                answer += "It's very cold today, dress warmly!"
+            elif temp < -10 and weather.detailed_status == "Rain":
+                answer += "It's raining today, dress well." 
+            elif temp < -10 and weather.detailed_status == "Mainly cloudy":
+                answer += "It's cold today, dress warmly."
+            elif temp < -10 and weather.detailed_status == "It's clear":
+                answer += "It's sunny today, dress well."
+            elif temp < 0 and weather.detailed_status == "Snow":
+                answer += "It's snowing today, dress warmly!" 
+            elif temp < 0 and weather.detailed_status == "Rain":
+                answer += "It's raining today, dress well."
+            elif temp < 0 and weather.detailed_status == "Mainly cloudy":
+                answer += "It's cold today, dress warmly."
+            elif temp < 0 and weather.detailed_status == "It's clear":
+                answer += "It's sunny today, dress well." 
+            elif temp < 10 and weather.detailed_status == "Snow":
+                answer += "Today hail, stay at home!"
             elif temp < 10 and weather.detailed_status == "дождь":
-                answer += "Сегодня дождь, хорошо одевайтесь."
-            elif temp < 10 and weather.detailed_status == "пасмурно":
-                answer += "Сегодня прохладно, возьмите куртку."
-            elif temp < 10 and weather.detailed_status == "ясно":
-                answer += "Сегодня солнышко, выходитее гулять!"
-            elif temp < 25 and weather.detailed_status == "снег":
-                answer += "Сегодня град, седите дома!"
-            elif temp < 25 and weather.detailed_status == "дождь":
-                answer += "Сегодня дождь, возьмите курку."
-            elif temp < 25 and weather.detailed_status == "пасмурно":
-                answer += "Сегодня прохладно, куртка не помешает."
-            elif temp < 25 and weather.detailed_status == "ясно":
-                answer += "Сегодня солнышко, одевайтесь посвободней и выходитее гулять!"
-            elif temp > 25 and weather.detailed_status == "снег":
-                answer += "Сегодня град, седите дома!"
-            elif temp > 25 and weather.detailed_status == "дождь":
-                answer += "Сегодня дождь, возьмите курку."
-            elif temp > 25 and weather.detailed_status == "пасмурно":
-                answer += "Сегодня прохладно, кофта не помешает."
-            elif temp > 25 and weather.detailed_status == "ясно":
-                answer += "Сегодня очено жарко, отличный день чтобы покупаться!"
+                answer += "It's raining today, dress well."
+            elif temp < 10 and weather.detailed_status == "Mainly cloudy":
+                answer += "It's cold today, bring a jacket."
+            elif temp < 10 and weather.detailed_status == "It's clear":
+                answer += "The sun is out today, go for a walk!"
+            elif temp < 25 and weather.detailed_status == "Snow":
+                answer += "Today hail, stay at home!"
+            elif temp < 25 and weather.detailed_status == "Rain":
+                answer += "It's raining today, grab a trigger."
+            elif temp < 25 and weather.detailed_status == "Mainly cloudy":
+                answer += "It's cold today, a jacket would be nice."
+            elif temp < 25 and weather.detailed_status == "It's clear":
+                answer += "Today is the sun, dress loose and go out for a walk!"
+            elif temp > 25 and weather.detailed_status == "Snow":
+                answer += "Today hail, stay at home!"
+            elif temp > 25 and weather.detailed_status == "Rain":
+                answer += "It's raining today, grab a trigger."
+            elif temp > 25 and weather.detailed_status == "Mainly cloudy":
+                answer += "It's chilly today, a jacket will not hurt."
+            elif temp > 25 and weather.detailed_status == "It's clear":
+                answer += "Today is very hot, great day to swim!"
         except Exception:
-            answer = "Город не найден, попробуйте снова.\n"
+            answer = "City not found, please try again.\n"
             print(time.ctime(), "User id:", message.from_user.id)
             print(time.ctime(), "Message:", message.text.title(), 'Error')
         bot.send_message(message.chat.id, answer)
